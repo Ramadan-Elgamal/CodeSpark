@@ -106,7 +106,7 @@ export default function CourseDetailPage() {
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 pb-4">
                   <div className="space-y-4 pl-8 border-l-2 border-primary/20">
-                     {lesson.microLessons.map((microLesson, microIndex) => (
+                     {Array.isArray(lesson.microLessons) && lesson.microLessons.map((microLesson, microIndex) => (
                         <div key={microIndex}>
                            <h5 className="font-semibold flex items-center gap-2">
                              <ChevronRight className="size-4 text-primary/70" />
