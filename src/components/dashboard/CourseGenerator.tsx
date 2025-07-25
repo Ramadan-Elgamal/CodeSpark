@@ -89,7 +89,7 @@ export function CourseGenerator() {
                 <Input id="topic" name="topic" placeholder="e.g., Introduction to React" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lessonCount">Course Length</Label>
+                <Label htmlFor="lessonCount">Course Type</Label>
                 <Select name="lessonCount" defaultValue="fundamentals">
                   <SelectTrigger id="lessonCount">
                     <SelectValue placeholder="Select course phase" />
