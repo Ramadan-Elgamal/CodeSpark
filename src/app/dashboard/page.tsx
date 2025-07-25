@@ -3,41 +3,48 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, PenSquare, BookCopy, History, Wand2, Save } from 'lucide-react';
 import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 
-const recentActivities = [
-    {
-        action: 'Generated course: "Advanced TypeScript"',
-        time: '2 hours ago',
-        icon: <Wand2 className="h-4 w-4" />
-    },
-    {
-        action: 'Saved course: "Introduction to React"',
-        time: '1 day ago',
-        icon: <Save className="h-4 w-4" />
-    },
-    {
-        action: 'Generated course: "Next.js Fundamentals"',
-        time: '3 days ago',
-        icon: <Wand2 className="h-4 w-4" />
-    },
-];
+interface Activity {
+    type: 'generate' | 'save';
+    courseTitle: string;
+    timestamp: number;
+}
+
+const getIconForActivity = (type: Activity['type']) => {
+    switch (type) {
+        case 'generate':
+            return <Wand2 className="h-4 w-4" />;
+        case 'save':
+            return <Save className="h-4 w-4" />;
+        default:
+            return <History className="h-4 w-4" />;
+    }
+};
 
 export default function DashboardPage() {
   const [savedCourses, setSavedCourses] = useState<GenerateCourseOutput[]>([]);
+  const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
-      const item = window.localStorage.getItem('savedCourses');
-      if (item) {
-        setSavedCourses(JSON.parse(item));
+      const savedCoursesItem = window.localStorage.getItem('savedCourses');
+      if (savedCoursesItem) {
+        setSavedCourses(JSON.parse(savedCoursesItem));
       }
+
+      const activitiesItem = window.localStorage.getItem('recentActivities');
+      if (activitiesItem) {
+        setRecentActivities(JSON.parse(activitiesItem));
+      }
+
     } catch (error) {
-      console.error("Failed to parse saved courses from localStorage", error);
+      console.error("Failed to parse from localStorage", error);
     } finally {
       setIsLoading(false);
     }
@@ -60,17 +67,33 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    {recentActivities.map((activity, index) => (
-                        <div key={index} className="flex items-start gap-4">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground mt-1">
-                                {activity.icon}
+                    {isLoading ? (
+                         [...Array(3)].map((_, i) => (
+                             <div key={i} className="flex items-start gap-4">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground mt-1 animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-4 w-3/4 bg-muted animate-pulse rounded-md" />
+                                    <div className="h-3 w-1/4 bg-muted animate-pulse rounded-md" />
+                                </div>
                             </div>
-                            <div className="flex-1">
-                                <p className="text-sm font-medium">{activity.action}</p>
-                                <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        ))
+                    ) : recentActivities.length > 0 ? (
+                        recentActivities.map((activity, index) => (
+                            <div key={index} className="flex items-start gap-4">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground mt-1">
+                                    {getIconForActivity(activity.type)}
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-sm font-medium">
+                                        {activity.type === 'generate' ? 'Generated course:' : 'Saved course:'} <span className="font-normal">"{activity.courseTitle}"</span>
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p className="text-sm text-center text-muted-foreground py-8">No recent activity yet. Generate a course to get started!</p>
+                    )}
                 </div>
             </CardContent>
         </Card>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useFormState, useFormStatus } from 'react-dom';
@@ -39,6 +40,23 @@ function SubmitButton() {
   );
 }
 
+const addActivity = (type: 'generate' | 'save', courseTitle: string) => {
+    try {
+        const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+        const newActivity = {
+            type,
+            courseTitle,
+            timestamp: Date.now(),
+        };
+        // Keep the list to a manageable size, e.g., 20 most recent
+        const updatedActivities = [newActivity, ...activities].slice(0, 20);
+        localStorage.setItem('recentActivities', JSON.stringify(updatedActivities));
+    } catch (error) {
+        console.error("Failed to save activity to localStorage", error);
+    }
+}
+
+
 export function CourseGenerator() {
   const [state, formAction] = useFormState(generateCourseAction, initialState);
   const { toast } = useToast();
@@ -50,6 +68,9 @@ export function CourseGenerator() {
         description: state.message,
         variant: 'destructive',
       });
+    }
+    if (state.status === 'success' && state.courseResult) {
+        addActivity('generate', state.courseResult.title);
     }
   }, [state, toast]);
 
@@ -133,8 +154,9 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
     const handleSaveCourse = () => {
         try {
             const savedCourses = JSON.parse(localStorage.getItem('savedCourses') || '[]');
-            savedCourses.push(courseResult);
+            savedCourses.unshift(courseResult);
             localStorage.setItem('savedCourses', JSON.stringify(savedCourses));
+            addActivity('save', courseResult.title);
             toast({
                 title: 'Course Saved!',
                 description: 'Your new course has been saved to your library.',
