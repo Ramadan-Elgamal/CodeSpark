@@ -27,7 +27,8 @@ export function Header() {
           <Link href="/signup">Sign Up</Link>
         </Button>
       </nav>
-      <div className="ml-auto lg:hidden">
+      <div className="ml-auto lg:hidden flex items-center gap-2">
+        <ThemeToggle />
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
@@ -46,9 +47,6 @@ export function Header() {
               <Link href="/pricing" className="text-muted-foreground hover:text-foreground" prefetch={false}>
                 Pricing
               </Link>
-              <div className="flex justify-center">
-                <ThemeToggle />
-              </div>
               <Link href="/login" className="text-muted-foreground hover:text-foreground" prefetch={false}>
                 Login
               </Link>
