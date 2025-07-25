@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, Wand2, Save, View, Trash2, BookText, Rocket } from 'lucide-react';
+import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 
 const initialState: FormState = {
   status: 'idle',
@@ -126,8 +127,28 @@ function LoadingState() {
 }
 
 
-function ResultState({ courseResult }: { courseResult: FormState['courseResult'] }) {
-    if(!courseResult) return null;
+function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
+    const { toast } = useToast();
+
+    const handleSaveCourse = () => {
+        try {
+            const savedCourses = JSON.parse(localStorage.getItem('savedCourses') || '[]');
+            savedCourses.push(courseResult);
+            localStorage.setItem('savedCourses', JSON.stringify(savedCourses));
+            toast({
+                title: 'Course Saved!',
+                description: 'Your new course has been saved to your library.',
+            });
+        } catch (error) {
+            console.error("Failed to save course to localStorage", error);
+            toast({
+                title: 'Error Saving Course',
+                description: 'There was a problem saving your course.',
+                variant: 'destructive',
+            });
+        }
+    };
+    
   return (
     <Card>
       <CardHeader>
@@ -170,7 +191,7 @@ function ResultState({ courseResult }: { courseResult: FormState['courseResult']
 
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
-        <Button><Save className="mr-2 h-4 w-4" /> Save Course</Button>
+        <Button onClick={handleSaveCourse}><Save className="mr-2 h-4 w-4" /> Save Course</Button>
         <Button variant="secondary"><View className="mr-2 h-4 w-4" /> View Full</Button>
         <Button variant="destructive-outline"><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
       </CardFooter>
