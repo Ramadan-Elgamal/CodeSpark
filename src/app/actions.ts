@@ -11,6 +11,14 @@ const coursePhaseToLessonCount: Record<string, number> = {
   real_world: 15,
 };
 
+const coursePhaseToLabel: Record<string, string> = {
+  fundamentals: 'Fundamentals Phase',
+  core: 'Core Projects Phase',
+  advanced: 'Advanced Concepts Phase',
+  real_world: 'Real World Projects Phase',
+};
+
+
 const courseGenerationSchema = z.object({
   topic: z.string().min(3, { message: 'Topic must be at least 3 characters long.' }),
   lessonCount: z.string().refine((val) => Object.keys(coursePhaseToLessonCount).includes(val), {
@@ -45,12 +53,12 @@ export async function generateCourseAction(
   }
   
   const { topic, lessonCount: lessonCountKey } = validatedFields.data;
-  const lessonCount = coursePhaseToLessonCount[lessonCountKey];
+  const phase = coursePhaseToLabel[lessonCountKey];
 
   try {
     const courseResult = await generateCourse({
       topic,
-      lessonCount,
+      phase,
     });
 
     if (!courseResult) {

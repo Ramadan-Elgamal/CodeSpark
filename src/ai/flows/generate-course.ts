@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,7 +14,7 @@ import {z} from 'genkit';
 
 const GenerateCourseInputSchema = z.object({
   topic: z.string().describe('The main topic for the course.'),
-  lessonCount: z.number().min(3).max(20).describe('The number of lessons to create.'),
+  phase: z.string().describe("The phase of learning the course is for (e.g., 'Fundamentals', 'Advanced Concepts')."),
 });
 export type GenerateCourseInput = z.infer<typeof GenerateCourseInputSchema>;
 
@@ -63,7 +64,8 @@ At the end of the full course, include:
 The format should be well-organized, suitable for web or PDF display, and easy to split into lessons in an app.
 
 The topic for the course is: {{{topic}}}
-The number of lessons to generate is: {{{lessonCount}}}.
+
+The course should be tailored for the '{{{phase}}}' phase of learning. Based on this phase, you must determine the appropriate number of lessons required to comprehensively cover the concepts for someone at that level. For example, a 'Fundamentals' phase might require fewer lessons than an 'Advanced Concepts' phase.
 `,
 });
 
