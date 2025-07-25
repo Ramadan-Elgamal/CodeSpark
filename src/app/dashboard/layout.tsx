@@ -44,6 +44,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/dashboard/courses', label: 'My Courses', icon: BookCopy },
     { href: '/dashboard/account', label: 'Account', icon: User },
   ];
+  
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <SidebarProvider>
@@ -59,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <Link href={item.href}>
-                  <SidebarMenuButton isActive={pathname === item.href}>
+                  <SidebarMenuButton isActive={isActive(item.href)}>
                     <item.icon />
                     <span>{item.label}</span>
                   </SidebarMenuButton>
