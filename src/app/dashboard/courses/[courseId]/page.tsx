@@ -98,17 +98,12 @@ export default function CourseDetailPage() {
               <AccordionItem value={`item-${index}`} key={index}>
                 <AccordionTrigger className="text-lg hover:no-underline">{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-4">
-                  <p className="text-muted-foreground italic text-base">{lesson.introduction}</p>
                   {lesson.sections.map((section, sIndex) => (
                     <div key={sIndex} className="space-y-2 pl-4 border-l-4 border-primary/30">
-                      <h5 className="font-semibold text-base">{section.title}</h5>
+                      <h5 className="font-semibold text-base">{`${index + 1}.${sIndex + 1} ${section.title}`}</h5>
                       <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{section.content}</p>
                     </div>
                   ))}
-                  <div className="pt-2 border-t mt-4">
-                      <h5 className="font-semibold text-base">Lesson Recap</h5>
-                      <p className="text-muted-foreground mt-1 text-base">{lesson.summary}</p>
-                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}

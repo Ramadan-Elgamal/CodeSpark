@@ -185,17 +185,12 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
             <AccordionItem value={`item-${index}`} key={index}>
               <AccordionTrigger className="text-base">{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
               <AccordionContent className="space-y-4">
-                <p className="text-muted-foreground italic">{lesson.introduction}</p>
                 {lesson.sections.map((section, sIndex) => (
                     <div key={sIndex} className="space-y-1 pl-4 border-l-2 border-primary/50">
-                        <h5 className="font-semibold">{section.title}</h5>
+                        <h5 className="font-semibold">{`${index + 1}.${sIndex + 1} ${section.title}`}</h5>
                         <p className="text-muted-foreground whitespace-pre-wrap">{section.content}</p>
                     </div>
                 ))}
-                <div className="pt-2">
-                    <h5 className="font-semibold">Lesson Recap</h5>
-                    <p className="text-muted-foreground">{lesson.summary}</p>
-                </div>
               </AccordionContent>
             </AccordionItem>
           ))}
