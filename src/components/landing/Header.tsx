@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/icons';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { ThemeToggle } from '../ThemeToggle';
 
 export function Header() {
   return (
@@ -11,13 +12,14 @@ export function Header() {
         <Logo className="h-6 w-6 text-primary" />
         <span className="font-headline ml-2 text-lg font-semibold">CodeSpark AI</span>
       </Link>
-      <nav className="ml-auto hidden gap-4 sm:gap-6 lg:flex">
+      <nav className="ml-auto hidden gap-4 sm:gap-6 lg:flex items-center">
         <Link href="/#features" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
           Features
         </Link>
         <Link href="/pricing" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
           Pricing
         </Link>
+        <ThemeToggle />
         <Button asChild variant="ghost">
           <Link href="/login">Login</Link>
         </Button>
@@ -44,6 +46,9 @@ export function Header() {
               <Link href="/pricing" className="text-muted-foreground hover:text-foreground" prefetch={false}>
                 Pricing
               </Link>
+              <div className="flex justify-center">
+                <ThemeToggle />
+              </div>
               <Link href="/login" className="text-muted-foreground hover:text-foreground" prefetch={false}>
                 Login
               </Link>
