@@ -14,7 +14,7 @@ import {z} from 'genkit';
 
 const GenerateCourseInputSchema = z.object({
   topic: z.string().describe('The main topic for the course.'),
-  phase: z.string().describe("The phase of learning the course is for (e.g., 'Fundamentals', 'Core Projects')."),
+  phase: z.string().describe("The phase of learning the course is for (e.g., 'Fundamentals', 'Intermediate', 'Advanced Concepts')."),
 });
 export type GenerateCourseInput = z.infer<typeof GenerateCourseInputSchema>;
 
@@ -53,9 +53,8 @@ Your task is to generate a high-level curriculum for a given programming topic, 
 **Instructions:**
 
 1.  **Analyze the Phase:**
-    *   For **'Fundamentals Phase'** or **'Advanced Concepts Phase'**: Create lessons focused on core concepts. Each lesson should be broken down into micro-lessons explaining specific sub-topics. Set \`isProjectBased\` to \`false\`.
-    *   For **'Core Projects Phase'** or **'Real World Projects Phase'**: Create lessons that are project-based. Each lesson title should be a project name. The micro-lessons should detail the features to build or steps to complete the project. Set \`isProjectBased\` to \`true\`.
-
+    *   For **'Fundamentals Phase'**, **'Intermediate Phase'**, or **'Advanced Concepts Phase'**: Create lessons focused on core concepts. Each lesson should be broken down into micro-lessons explaining specific sub-topics. Set \`isProjectBased\` to \`false\`. The curriculum should be based on concepts, not projects.
+    
 2.  **Generate the Curriculum:**
     *   **Title and Summary:** Create a compelling title and a concise summary for the overall curriculum.
     *   **Lessons & Micro-Lessons:**

@@ -97,9 +97,8 @@ export function CourseGenerator() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="fundamentals">Fundamentals Phase</SelectItem>
-                    <SelectItem value="core">Core Projects Phase</SelectItem>
+                    <SelectItem value="intermediate">Intermediate Phase</SelectItem>
                     <SelectItem value="advanced">Advanced Concepts Phase</SelectItem>
-                    <SelectItem value="real_world">Real World Projects Phase</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

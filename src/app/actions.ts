@@ -6,9 +6,8 @@ import { generateCourse, GenerateCourseOutput } from '@/ai/flows/generate-course
 
 const coursePhaseToLabel: Record<string, string> = {
   fundamentals: 'Fundamentals Phase',
-  core: 'Core Projects Phase',
+  intermediate: 'Intermediate Phase',
   advanced: 'Advanced Concepts Phase',
-  real_world: 'Real World Projects Phase',
 };
 
 
