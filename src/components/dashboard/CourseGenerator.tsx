@@ -90,14 +90,15 @@ export function CourseGenerator() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lessonCount">Course Length</Label>
-                <Select name="lessonCount" defaultValue="5">
+                <Select name="lessonCount" defaultValue="fundamentals">
                   <SelectTrigger id="lessonCount">
-                    <SelectValue placeholder="Select number of lessons" />
+                    <SelectValue placeholder="Select course phase" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="5">5 Lessons</SelectItem>
-                    <SelectItem value="10">10 Lessons</SelectItem>
-                    <SelectItem value="15">15 Lessons</SelectItem>
+                    <SelectItem value="fundamentals">Fundamentals Phase</SelectItem>
+                    <SelectItem value="core">Core Projects Phase</SelectItem>
+                    <SelectItem value="advanced">Advanced Concepts Phase</SelectItem>
+                    <SelectItem value="real_world">Real World Projects Phase</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

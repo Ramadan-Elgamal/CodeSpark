@@ -4,9 +4,18 @@
 import { z } from 'zod';
 import { generateCourse, GenerateCourseOutput } from '@/ai/flows/generate-course';
 
+const coursePhaseToLessonCount: Record<string, number> = {
+  fundamentals: 5,
+  core: 8,
+  advanced: 12,
+  real_world: 15,
+};
+
 const courseGenerationSchema = z.object({
   topic: z.string().min(3, { message: 'Topic must be at least 3 characters long.' }),
-  lessonCount: z.coerce.number().min(3).max(20),
+  lessonCount: z.string().refine((val) => Object.keys(coursePhaseToLessonCount).includes(val), {
+    message: 'Invalid course phase selected.',
+  }),
 });
 
 export type CourseResult = GenerateCourseOutput;
@@ -27,13 +36,16 @@ export async function generateCourseAction(
   });
 
   if (!validatedFields.success) {
+    const error = validatedFields.error.flatten().fieldErrors;
+    const message = error.topic?.[0] || error.lessonCount?.[0] || 'Invalid input.';
     return {
       status: 'error',
-      message: validatedFields.error.flatten().fieldErrors.topic?.[0] || 'Invalid input.',
+      message,
     };
   }
   
-  const { topic, lessonCount } = validatedFields.data;
+  const { topic, lessonCount: lessonCountKey } = validatedFields.data;
+  const lessonCount = coursePhaseToLessonCount[lessonCountKey];
 
   try {
     const courseResult = await generateCourse({
