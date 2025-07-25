@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -89,7 +90,7 @@ export default function MyCoursesPage() {
                 <CardDescription className="line-clamp-3">{course.summary}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">{course.curriculum.length} {course.isProjectBased ? 'projects' : 'items'}</p>
+                <p className="text-sm text-muted-foreground">{course.lessons.length} {course.isProjectBased ? 'projects' : 'lessons'}</p>
               </CardContent>
               <CardFooter className="flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <Button asChild size="sm">

@@ -4,13 +4,6 @@
 import { z } from 'zod';
 import { generateCourse, GenerateCourseOutput } from '@/ai/flows/generate-course';
 
-const coursePhaseToLessonCount: Record<string, number> = {
-  fundamentals: 5,
-  core: 8,
-  advanced: 12,
-  real_world: 15,
-};
-
 const coursePhaseToLabel: Record<string, string> = {
   fundamentals: 'Fundamentals Phase',
   core: 'Core Projects Phase',
@@ -21,7 +14,7 @@ const coursePhaseToLabel: Record<string, string> = {
 
 const courseGenerationSchema = z.object({
   topic: z.string().min(3, { message: 'Topic must be at least 3 characters long.' }),
-  lessonCount: z.string().refine((val) => Object.keys(coursePhaseToLessonCount).includes(val), {
+  lessonCount: z.string().refine((val) => Object.keys(coursePhaseToLabel).includes(val), {
     message: 'Invalid course phase selected.',
   }),
 });

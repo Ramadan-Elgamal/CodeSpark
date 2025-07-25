@@ -12,7 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, Wand2, Save, BookText, Rocket, FileText, Trash2, ArrowRight } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Loader2, Wand2, Save, BookText, Rocket, FileText, ArrowRight, ChevronRight } from 'lucide-react';
 import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 import Link from 'next/link';
 
@@ -185,17 +186,31 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
       </CardHeader>
       <CardContent>
         <h4 className="font-semibold mb-4 text-lg">{curriculumTitle}</h4>
-        <div className="space-y-6">
-            {courseResult.curriculum.map((item, index) => (
-              <div key={index} className="pl-4 border-l-2 border-primary/50">
-                <h5 className="font-semibold flex items-center gap-2">
+        <Accordion type="multiple" className="w-full space-y-2">
+            {courseResult.lessons.map((lesson, lessonIndex) => (
+              <AccordionItem key={lessonIndex} value={`lesson-${lessonIndex}`} className="border rounded-md px-4">
+                <AccordionTrigger className="font-semibold hover:no-underline">
+                   <div className="flex items-center gap-2">
                     {courseResult.isProjectBased ? <Rocket className="size-4 text-primary"/> : <FileText className="size-4 text-primary"/>}
-                    {`${index + 1}. ${item.title}`}
-                </h5>
-                <p className="text-muted-foreground whitespace-pre-wrap text-sm mt-1">{item.description}</p>
-              </div>
+                    {`${lessonIndex + 1}. ${lesson.title}`}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pt-1 pb-2">
+                    <div className="space-y-3 pl-6">
+                        {lesson.microLessons.map((microLesson, microIndex) => (
+                            <div key={microIndex}>
+                               <h5 className="font-semibold flex items-center gap-2 text-sm">
+                                 <ChevronRight className="size-4 text-primary/70" />
+                                {`${lessonIndex + 1}.${microIndex + 1} ${microLesson.title}`}
+                               </h5>
+                               <p className="text-muted-foreground whitespace-pre-wrap text-sm mt-1 ml-6">{microLesson.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         
         <div className="mt-6 space-y-4 border-t pt-4">
             <div>

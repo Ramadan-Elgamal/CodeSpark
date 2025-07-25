@@ -135,7 +135,7 @@ export default function DashboardPage() {
                                     <Link href={`/dashboard/courses/${savedCourses.length - 1 - index}`} className="font-medium hover:underline truncate" title={course.title}>
                                         {course.title}
                                     </Link>
-                                    <span className="text-xs text-muted-foreground">{course.curriculum.length} {course.isProjectBased ? 'projects' : 'items'}</span>
+                                    <span className="text-xs text-muted-foreground">{course.lessons.length} {course.isProjectBased ? 'projects' : 'lessons'}</span>
                                 </li>
                             ))}
                         </ul>
