@@ -48,8 +48,8 @@ Your task is to generate a high-level curriculum or learning roadmap for a given
 **Instructions:**
 
 1.  **Analyze the Phase:** The user will provide a 'phase' of learning.
-    *   If the phase is **'Fundamentals Phase'** or **'Advanced Concepts Phase'**, your output should be a list of key concepts, skills, and topics the learner needs to master. Set `isProjectBased` to \`false\`.
-    *   If the phase is **'Core Projects Phase'** or **'Real World Projects Phase'**, your output should be a list of project ideas that a learner should build to practice their skills. Set `isProjectBased` to \`true\`. Each project should be a curriculum item.
+    *   If the phase is **'Fundamentals Phase'** or **'Advanced Concepts Phase'**, your output should be a list of key concepts, skills, and topics the learner needs to master. Set \`isProjectBased\` to \`false\`.
+    *   If the phase is **'Core Projects Phase'** or **'Real World Projects Phase'**, your output should be a list of project ideas that a learner should build to practice their skills. Set \`isProjectBased\` to \`true\`. Each project should be a curriculum item.
 
 2.  **Generate the Curriculum:**
     *   **Title and Summary:** Create a compelling title and a concise summary for the overall curriculum.
