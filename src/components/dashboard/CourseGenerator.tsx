@@ -11,10 +11,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, Wand2, Save, View, Trash2, BookText, Rocket } from 'lucide-react';
+import { Loader2, Wand2, Save, BookText, Rocket, FileText, Trash2, ArrowRight } from 'lucide-react';
 import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
+import Link from 'next/link';
 
 const initialState: FormState = {
   status: 'idle',
@@ -81,7 +81,7 @@ export function CourseGenerator() {
           <Card>
             <CardHeader>
               <CardTitle className="font-headline">Course Details</CardTitle>
-              <CardDescription>Provide a topic and desired length.</CardDescription>
+              <CardDescription>Provide a topic and desired phase.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -155,13 +155,15 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
     const handleSaveCourse = () => {
         try {
             const savedCourses = JSON.parse(localStorage.getItem('savedCourses') || '[]');
-            savedCourses.unshift(courseResult);
+            // By adding to the end, the index matches the link in My Courses page
+            savedCourses.push(courseResult); 
             localStorage.setItem('savedCourses', JSON.stringify(savedCourses));
             addActivity('save', courseResult.title);
             toast({
                 title: 'Course Saved!',
                 description: 'Your new course has been saved to your library.',
             });
+            return savedCourses.length - 1;
         } catch (error) {
             console.error("Failed to save course to localStorage", error);
             toast({
@@ -169,9 +171,12 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
                 description: 'There was a problem saving your course.',
                 variant: 'destructive',
             });
+            return -1;
         }
     };
     
+    const curriculumTitle = courseResult.isProjectBased ? 'Projects' : 'Curriculum';
+
   return (
     <Card>
       <CardHeader>
@@ -179,39 +184,34 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
         <CardDescription>{courseResult.summary}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h4 className="font-semibold mb-2 text-lg">Lessons:</h4>
-        <Accordion type="single" collapsible className="w-full">
-          {courseResult.lessons.map((lesson, index) => (
-            <AccordionItem value={`item-${index}`} key={index}>
-              <AccordionTrigger className="text-base">{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
-              <AccordionContent className="space-y-4">
-                {lesson.sections.map((section, sIndex) => (
-                    <div key={sIndex} className="space-y-1 pl-4 border-l-2 border-primary/50">
-                        <h5 className="font-semibold">{`${index + 1}.${sIndex + 1} ${section.title}`}</h5>
-                        <p className="text-muted-foreground whitespace-pre-wrap">{section.content}</p>
-                    </div>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <h4 className="font-semibold mb-4 text-lg">{curriculumTitle}</h4>
+        <div className="space-y-6">
+            {courseResult.curriculum.map((item, index) => (
+              <div key={index} className="pl-4 border-l-2 border-primary/50">
+                <h5 className="font-semibold flex items-center gap-2">
+                    {courseResult.isProjectBased ? <Rocket className="size-4 text-primary"/> : <FileText className="size-4 text-primary"/>}
+                    {`${index + 1}. ${item.title}`}
+                </h5>
+                <p className="text-muted-foreground whitespace-pre-wrap text-sm mt-1">{item.description}</p>
+              </div>
+            ))}
+          </div>
         
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-4 border-t pt-4">
             <div>
-                <h4 className="font-headline text-lg flex items-center gap-2"><BookText className="size-5 text-primary" />Final Review</h4>
-                <p className="text-muted-foreground mt-1">{courseResult.finalReview}</p>
-            </div>
-             <div>
-                <h4 className="font-headline text-lg flex items-center gap-2"><Rocket className="size-5 text-primary" />Project Suggestion</h4>
-                <p className="text-muted-foreground mt-1">{courseResult.projectSuggestion}</p>
+                <h4 className="font-headline text-lg flex items-center gap-2"><BookText className="size-5 text-primary" />Final Note</h4>
+                <p className="text-muted-foreground mt-1">{courseResult.finalNote}</p>
             </div>
         </div>
 
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <Button onClick={handleSaveCourse}><Save className="mr-2 h-4 w-4" /> Save Course</Button>
-        <Button variant="secondary"><View className="mr-2 h-4 w-4" /> View Full</Button>
-        <Button variant="destructive-outline"><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
+        <Button variant="secondary" asChild>
+          <Link href="/dashboard/courses">
+            My Courses <ArrowRight className="ml-2" />
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );

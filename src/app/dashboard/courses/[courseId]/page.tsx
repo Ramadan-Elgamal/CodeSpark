@@ -6,9 +6,8 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookText, Rocket, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText } from 'lucide-react';
 import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 
 export default function CourseDetailPage() {
@@ -78,6 +77,8 @@ export default function CourseDetailPage() {
     );
   }
 
+  const curriculumTitle = course.isProjectBased ? 'Projects' : 'Curriculum';
+
   return (
     <div className="space-y-6">
        <Button asChild variant="outline" size="sm">
@@ -92,32 +93,22 @@ export default function CourseDetailPage() {
           <CardDescription className="text-base">{course.summary}</CardDescription>
         </CardHeader>
         <CardContent>
-          <h4 className="font-semibold mb-2 text-xl font-headline">Lessons</h4>
-          <Accordion type="single" collapsible className="w-full">
-            {course.lessons.map((lesson, index) => (
-              <AccordionItem value={`item-${index}`} key={index}>
-                <AccordionTrigger className="text-lg hover:no-underline">{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
-                <AccordionContent className="space-y-6 pt-4">
-                  {lesson.sections.map((section, sIndex) => (
-                    <div key={sIndex} className="space-y-2 pl-4 border-l-4 border-primary/30">
-                      <h5 className="font-semibold text-base">{`${index + 1}.${sIndex + 1} ${section.title}`}</h5>
-                      <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{section.content}</p>
-                    </div>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
+          <h4 className="font-semibold mb-4 text-xl font-headline">{curriculumTitle}</h4>
+          <div className="space-y-6">
+            {course.curriculum.map((item, index) => (
+              <div key={index} className="pl-4 border-l-4 border-primary/30">
+                <h5 className="font-semibold text-lg flex items-center gap-2">
+                    {course.isProjectBased ? <Rocket className="size-5 text-primary"/> : <FileText className="size-5 text-primary"/>}
+                    {`${index + 1}. ${item.title}`}
+                </h5>
+                <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed mt-1">{item.description}</p>
+              </div>
             ))}
-          </Accordion>
+          </div>
 
-          <div className="mt-8 space-y-6 border-t pt-6">
-              <div>
-                  <h4 className="font-headline text-xl flex items-center gap-2"><BookText className="size-5 text-primary" />Final Review</h4>
-                  <p className="text-muted-foreground mt-2 text-base leading-relaxed">{course.finalReview}</p>
-              </div>
-                <div>
-                  <h4 className="font-headline text-xl flex items-center gap-2"><Rocket className="size-5 text-primary" />Project Suggestion</h4>
-                  <p className="text-muted-foreground mt-2 text-base leading-relaxed">{course.projectSuggestion}</p>
-              </div>
+          <div className="mt-8 border-t pt-6">
+              <h4 className="font-headline text-xl flex items-center gap-2"><BookText className="size-5 text-primary" />Final Note</h4>
+              <p className="text-muted-foreground mt-2 text-base leading-relaxed">{course.finalNote}</p>
           </div>
         </CardContent>
       </Card>
