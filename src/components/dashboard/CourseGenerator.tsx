@@ -196,7 +196,7 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
                 </AccordionTrigger>
                 <AccordionContent className="pt-1 pb-2">
                     <div className="space-y-3 pl-6">
-                        {lesson.microLessons.map((microLesson, microIndex) => (
+                        {Array.isArray(lesson.microLessons) && lesson.microLessons.length > 0 ? lesson.microLessons.map((microLesson, microIndex) => (
                             <div key={microIndex}>
                                <h5 className="font-semibold flex items-center gap-2 text-sm">
                                  <ChevronRight className="size-4 text-primary/70" />
@@ -204,7 +204,9 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
                                </h5>
                                <p className="text-muted-foreground whitespace-pre-wrap text-sm mt-1 ml-6">{microLesson.description}</p>
                             </div>
-                        ))}
+                        )) : (
+                            <p className="text-muted-foreground whitespace-pre-wrap text-sm">{lesson.description}</p>
+                        )}
                     </div>
                 </AccordionContent>
               </AccordionItem>

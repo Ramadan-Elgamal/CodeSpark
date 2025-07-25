@@ -25,7 +25,8 @@ const MicroLessonSchema = z.object({
 
 const LessonSchema = z.object({
     title: z.string().describe("The title of the main lesson or project."),
-    microLessons: z.array(MicroLessonSchema).describe("An array of comprehensive micro-lessons that break down the main lesson."),
+    description: z.string().describe("A detailed and comprehensive description of the lesson content, explaining the concept thoroughly."),
+    microLessons: z.array(MicroLessonSchema).describe("An array of comprehensive micro-lessons that break down the main lesson.").optional(),
 });
 
 const GenerateCourseOutputSchema = z.object({
