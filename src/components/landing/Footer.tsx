@@ -1,19 +1,91 @@
 import Link from 'next/link';
+import { Logo } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { Github, Linkedin, Twitter } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-      <p className="text-xs text-muted-foreground">&copy; {currentYear} CodeSpark AI. All rights reserved.</p>
-      <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-        <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-          Terms of Service
-        </Link>
-        <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-          Privacy
-        </Link>
-      </nav>
+    <footer className="bg-secondary text-secondary-foreground">
+      <div className="container py-12 px-4 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+          <div className="col-span-full lg:col-span-1 flex flex-col items-start">
+            <Link href="/" className="flex items-center gap-2 mb-4" prefetch={false}>
+              <Logo className="h-7 w-7 text-primary" />
+              <span className="text-xl font-headline font-semibold text-foreground">CodeSpark</span>
+            </Link>
+            <p className="text-sm max-w-xs">AI-powered course generation for the modern web.</p>
+          </div>
+          <div className="space-y-2">
+            <h4 className="font-semibold text-foreground">Product</h4>
+            <nav className="flex flex-col gap-1.5">
+              <Link href="/#features" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Features
+              </Link>
+              <Link href="/pricing" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Pricing
+              </Link>
+              <Link href="/login" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Sign In
+              </Link>
+            </nav>
+          </div>
+          <div className="space-y-2">
+            <h4 className="font-semibold text-foreground">Company</h4>
+            <nav className="flex flex-col gap-1.5">
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                About Us
+              </Link>
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Careers
+              </Link>
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Contact
+              </Link>
+            </nav>
+          </div>
+          <div className="space-y-2">
+            <h4 className="font-semibold text-foreground">Resources</h4>
+            <nav className="flex flex-col gap-1.5">
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Blog
+              </Link>
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Docs
+              </Link>
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Support
+              </Link>
+            </nav>
+          </div>
+          <div className="space-y-2">
+            <h4 className="font-semibold text-foreground">Legal</h4>
+            <nav className="flex flex-col gap-1.5">
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Terms of Service
+              </Link>
+              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+                Privacy Policy
+              </Link>
+            </nav>
+          </div>
+        </div>
+        <div className="mt-8 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground">&copy; {currentYear} CodeSpark AI. All rights reserved.</p>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="#"><Twitter /></Link>
+            </Button>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="#"><Github /></Link>
+            </Button>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="#"><Linkedin /></Link>
+            </Button>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }

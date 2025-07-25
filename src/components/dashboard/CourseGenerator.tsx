@@ -148,7 +148,7 @@ function ResultState({ courseResult }: { courseResult: FormState['courseResult']
       <CardFooter className="flex-wrap gap-2">
         <Button><Save className="mr-2 h-4 w-4" /> Save Course</Button>
         <Button variant="secondary"><View className="mr-2 h-4 w-4" /> View Full</Button>
-        <Button variant="destructive-outline" className="text-destructive border-destructive hover:bg-destructive/10"><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
+        <Button variant="destructive-outline"><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
       </CardFooter>
     </Card>
   );
