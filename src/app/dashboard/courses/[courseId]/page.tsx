@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
+import { Label } from '@/components/ui/label';
 import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, ChevronRight } from 'lucide-react';
 import type { GenerateCourseOutput, Lesson, MicroLesson } from '@/ai/flows/generate-course';
 
