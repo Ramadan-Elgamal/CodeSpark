@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { generateCourseAction, FormState } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -59,7 +59,7 @@ const addActivity = (type: 'generate' | 'save', courseTitle: string) => {
 
 
 export function CourseGenerator() {
-  const [state, formAction] = useFormState(generateCourseAction, initialState);
+  const [state, formAction] = useActionState(generateCourseAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
