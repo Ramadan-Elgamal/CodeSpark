@@ -20,12 +20,12 @@ export type GenerateCourseInput = z.infer<typeof GenerateCourseInputSchema>;
 
 const MicroLessonSchema = z.object({
     title: z.string().describe("The title of the micro-lesson or a specific sub-topic/feature."),
-    description: z.string().describe("A detailed description of the micro-lesson content."),
+    description: z.string().describe("A detailed and comprehensive description of the micro-lesson content, explaining the concept thoroughly."),
 });
 
 const LessonSchema = z.object({
     title: z.string().describe("The title of the main lesson or project."),
-    microLessons: z.array(MicroLessonSchema).describe("An array of micro-lessons that break down the main lesson."),
+    microLessons: z.array(MicroLessonSchema).describe("An array of comprehensive micro-lessons that break down the main lesson."),
 });
 
 const GenerateCourseOutputSchema = z.object({
@@ -48,7 +48,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateCourseOutputSchema},
   prompt: `You are an expert programming instructor and curriculum designer.
 
-Your task is to generate a high-level curriculum for a given programming topic, structured as a series of lessons, each broken down into micro-lessons.
+Your task is to generate a comprehensive and detailed curriculum for a given programming topic, structured as a series of lessons, each broken down into micro-lessons.
 
 **Instructions:**
 
@@ -58,11 +58,11 @@ Your task is to generate a high-level curriculum for a given programming topic, 
 2.  **Generate the Curriculum:**
     *   **Title and Summary:** Create a compelling title and a concise summary for the overall curriculum.
     *   **Lessons & Micro-Lessons:**
-        *   Generate a series of main **lessons**.
-        *   For each lesson, generate 2-5 **micro-lessons**. Each micro-lesson needs a title and a description.
+        *   Generate a series of main **lessons** that logically progress through the topic.
+        *   For each lesson, generate 3-5 comprehensive **micro-lessons**. Each micro-lesson needs a clear title and a detailed, in-depth description that thoroughly explains the concept. Assume the learner is new to the specific concept being taught in the micro-lesson.
     *   **Final Note:** Include a brief, encouraging final note.
 
-3.  **Determine Length:** Based on the topic and phase, determine the appropriate number of lessons required for a comprehensive overview.
+3.  **Determine Length:** Based on the topic and phase, determine the appropriate number of lessons required for a comprehensive overview. Don't be afraid to create a large number of lessons if the topic requires it.
 
 The topic for the course is: {{{topic}}}
 The course should be tailored for the '{{{phase}}}' phase of learning.
