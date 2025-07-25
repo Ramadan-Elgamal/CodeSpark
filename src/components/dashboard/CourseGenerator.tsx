@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, Wand2, Save, View, Trash2 } from 'lucide-react';
+import { Loader2, Wand2, Save, View, Trash2, BookText, Rocket } from 'lucide-react';
 
 const initialState: FormState = {
   status: 'idle',
@@ -135,15 +135,39 @@ function ResultState({ courseResult }: { courseResult: FormState['courseResult']
         <CardDescription>{courseResult.summary}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h4 className="font-semibold mb-2">Lessons:</h4>
+        <h4 className="font-semibold mb-2 text-lg">Lessons:</h4>
         <Accordion type="single" collapsible className="w-full">
           {courseResult.lessons.map((lesson, index) => (
             <AccordionItem value={`item-${index}`} key={index}>
-              <AccordionTrigger>{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
-              <AccordionContent>{lesson.description}</AccordionContent>
+              <AccordionTrigger className="text-base">{`${index + 1}. ${lesson.title}`}</AccordionTrigger>
+              <AccordionContent className="space-y-4">
+                <p className="text-muted-foreground italic">{lesson.introduction}</p>
+                {lesson.sections.map((section, sIndex) => (
+                    <div key={sIndex} className="space-y-1 pl-4 border-l-2 border-primary/50">
+                        <h5 className="font-semibold">{section.title}</h5>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{section.content}</p>
+                    </div>
+                ))}
+                <div className="pt-2">
+                    <h5 className="font-semibold">Lesson Recap</h5>
+                    <p className="text-muted-foreground">{lesson.summary}</p>
+                </div>
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+        
+        <div className="mt-6 space-y-4">
+            <div>
+                <h4 className="font-headline text-lg flex items-center gap-2"><BookText className="size-5 text-primary" />Final Review</h4>
+                <p className="text-muted-foreground mt-1">{courseResult.finalReview}</p>
+            </div>
+             <div>
+                <h4 className="font-headline text-lg flex items-center gap-2"><Rocket className="size-5 text-primary" />Project Suggestion</h4>
+                <p className="text-muted-foreground mt-1">{courseResult.projectSuggestion}</p>
+            </div>
+        </div>
+
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <Button><Save className="mr-2 h-4 w-4" /> Save Course</Button>
