@@ -1,8 +1,12 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, PenSquare, BookCopy, History, Wand2, Save } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 
 const recentActivities = [
     {
@@ -23,6 +27,22 @@ const recentActivities = [
 ];
 
 export default function DashboardPage() {
+  const [savedCourses, setSavedCourses] = useState<GenerateCourseOutput[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    try {
+      const item = window.localStorage.getItem('savedCourses');
+      if (item) {
+        setSavedCourses(JSON.parse(item));
+      }
+    } catch (error) {
+      console.error("Failed to parse saved courses from localStorage", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  
   return (
     <div className="grid gap-6">
       <div className="space-y-1.5">
@@ -61,9 +81,9 @@ export default function DashboardPage() {
                 <PenSquare className="h-5 w-5 text-primary" />
                 <span>Generate a New Course</span>
                 </CardTitle>
-                <CardDescription>Start creating a new programming course with the power of AI.</CardDescription>
             </CardHeader>
             <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Start creating a new programming course with the power of AI.</p>
                 <Button asChild>
                 <Link href="/dashboard/generate">
                     Start Generating <ArrowRight className="ml-2 h-4 w-4" />
@@ -72,20 +92,41 @@ export default function DashboardPage() {
             </CardContent>
             </Card>
             <Card>
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">
-                <BookCopy className="h-5 w-5 text-primary" />
-                <span>View Your Courses</span>
-                </CardTitle>
-                <CardDescription>Access and manage all the courses you have saved.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Button asChild variant="secondary">
-                <Link href="/dashboard/courses">
-                    My Courses <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                </Button>
-            </CardContent>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                    <BookCopy className="h-5 w-5 text-primary" />
+                    <span>Saved Courses</span>
+                    </CardTitle>
+                    <CardDescription>A quick look at your most recent courses.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <div className="space-y-2">
+                            <div className="h-4 w-3/4 bg-muted animate-pulse rounded-md" />
+                            <div className="h-4 w-1/2 bg-muted animate-pulse rounded-md" />
+                        </div>
+                    ) : savedCourses.length > 0 ? (
+                        <ul className="space-y-3">
+                            {savedCourses.slice(0, 2).map((course, index) => (
+                                <li key={index} className="flex items-center justify-between text-sm">
+                                    <Link href={`/dashboard/courses/${savedCourses.length - 1 - index}`} className="font-medium hover:underline truncate" title={course.title}>
+                                        {course.title}
+                                    </Link>
+                                    <span className="text-xs text-muted-foreground">{course.lessons.length} lessons</span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">No courses saved yet.</p>
+                    )}
+                </CardContent>
+                <CardFooter>
+                    <Button asChild variant="secondary" className="w-full">
+                        <Link href="/dashboard/courses">
+                            View All Courses <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
+                </CardFooter>
             </Card>
         </div>
       </div>
