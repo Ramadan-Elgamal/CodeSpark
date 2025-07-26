@@ -11,7 +11,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, Link as LinkIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, Link as LinkIcon, Pencil, X, Check as CheckIcon } from 'lucide-react';
 import type { GenerateCourseOutput, Lesson, MicroLesson } from '@/ai/flows/generate-course';
 
 // Add a 'completed' property to lessons and micro-lessons for state tracking
@@ -33,6 +35,10 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState<CourseWithProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState<{ title: string; description: string }>({ title: '', description: '' });
+
 
   useEffect(() => {
     if (typeof courseId !== 'string') return;
@@ -103,6 +109,39 @@ export default function CourseDetailPage() {
         }
         updateCourseProgress(newCourse);
      }
+  };
+
+  const handleStartEditing = (id: string, currentTitle: string, currentDescription: string) => {
+    setEditingId(id);
+    setEditedContent({ title: currentTitle, description: currentDescription });
+  };
+
+  const handleCancelEditing = () => {
+    setEditingId(null);
+    setEditedContent({ title: '', description: '' });
+  };
+
+  const handleSaveEditing = () => {
+    if (!editingId || !course) return;
+    const [type, lessonIndexStr, microLessonIndexStr] = editingId.split('-');
+    const lessonIndex = parseInt(lessonIndexStr, 10);
+
+    const newCourse = { ...course };
+
+    if (type === 'lesson' && newCourse.lessons[lessonIndex]) {
+      newCourse.lessons[lessonIndex].title = editedContent.title;
+      newCourse.lessons[lessonIndex].description = editedContent.description;
+    } else if (type === 'microlesson') {
+      const microLessonIndex = parseInt(microLessonIndexStr, 10);
+      const microLesson = newCourse.lessons[lessonIndex]?.microLessons?.[microLessonIndex];
+      if (microLesson) {
+        microLesson.title = editedContent.title;
+        microLesson.description = editedContent.description;
+      }
+    }
+    
+    updateCourseProgress(newCourse);
+    handleCancelEditing();
   };
 
   const { progress, totalItems } = useMemo(() => {
@@ -189,17 +228,34 @@ export default function CourseDetailPage() {
         <CardContent>
           <h4 className="font-semibold mb-4 text-xl font-headline">{curriculumTitle}</h4>
             <Accordion type="multiple" className="w-full space-y-4">
-            {course.lessons.map((lesson, lessonIndex) => (
+            {course.lessons.map((lesson, lessonIndex) => {
+              const lessonEditingId = `lesson-${lessonIndex}`;
+              const isEditingLesson = editingId === lessonEditingId;
+
+              return(
               <AccordionItem key={lessonIndex} value={`lesson-${lessonIndex}`} className="border rounded-lg px-4">
                 <AccordionTrigger className="text-lg font-semibold hover:no-underline gap-3">
                   <div className="flex items-center gap-3 flex-1">
                     {course.isProjectBased ? <Rocket className="size-5 text-primary"/> : <FileText className="size-5 text-primary"/>}
-                    {`${lessonIndex + 1}. ${lesson.title}`}
+                     {isEditingLesson ? (
+                        <Input 
+                            value={editedContent.title}
+                            onChange={(e) => setEditedContent({...editedContent, title: e.target.value})}
+                            className="text-lg font-semibold"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                     ) : (
+                        `${lessonIndex + 1}. ${lesson.title}`
+                     )}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-2 pb-4">
                   <div className="space-y-4 pl-8 border-l-2 border-primary/20">
-                     {Array.isArray(lesson.microLessons) && lesson.microLessons.length > 0 ? lesson.microLessons.map((microLesson, microIndex) => (
+                     {Array.isArray(lesson.microLessons) && lesson.microLessons.length > 0 ? lesson.microLessons.map((microLesson, microIndex) => {
+                       const microLessonEditingId = `microlesson-${lessonIndex}-${microIndex}`;
+                       const isEditingMicroLesson = editingId === microLessonEditingId;
+
+                       return (
                         <div key={microIndex} className="flex items-start gap-3">
                           <Checkbox 
                             id={`ml-${lessonIndex}-${microIndex}`} 
@@ -209,10 +265,39 @@ export default function CourseDetailPage() {
                           />
                            <div className="grid gap-1.5 leading-snug flex-1">
                              <label htmlFor={`ml-${lessonIndex}-${microIndex}`} className="font-semibold flex items-center gap-2 cursor-pointer">
-                               {`${lessonIndex + 1}.${microIndex + 1} ${microLesson.title}`}
+                               {isEditingMicroLesson ? (
+                                    <Input 
+                                        value={editedContent.title}
+                                        onChange={(e) => setEditedContent({...editedContent, title: e.target.value})}
+                                        className="font-semibold"
+                                    />
+                               ) : (
+                                 `${lessonIndex + 1}.${microIndex + 1} ${microLesson.title}`
+                               )}
                              </label>
-                             <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{microLesson.description}</p>
-                            {microLesson.resources && (microLesson.resources.free?.length || microLesson.resources.paid?.length) && (
+                             {isEditingMicroLesson ? (
+                                <Textarea 
+                                    value={editedContent.description}
+                                    onChange={(e) => setEditedContent({...editedContent, description: e.target.value})}
+                                    className="text-base leading-relaxed"
+                                    rows={4}
+                                />
+                             ) : (
+                                <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{microLesson.description}</p>
+                             )}
+
+                            {isEditingMicroLesson ? (
+                                <div className="flex items-center gap-2 mt-2">
+                                    <Button size="sm" onClick={handleSaveEditing}><CheckIcon className="size-4 mr-2" />Save</Button>
+                                    <Button size="sm" variant="ghost" onClick={handleCancelEditing}><X className="size-4 mr-2" />Cancel</Button>
+                                </div>
+                            ) : (
+                                <Button size="sm" variant="ghost" className="justify-start p-1 h-auto -ml-1 text-muted-foreground" onClick={() => handleStartEditing(microLessonEditingId, microLesson.title, microLesson.description)}>
+                                    <Pencil className="size-3 mr-2" /> Edit
+                                </Button>
+                            )}
+
+                            {!isEditingMicroLesson && microLesson.resources && (microLesson.resources.free?.length || microLesson.resources.paid?.length) && (
                                 <div className="mt-3 rounded-md border bg-secondary/50 p-3 text-sm">
                                     <h6 className="font-semibold mb-2">Resources</h6>
                                     {microLesson.resources.free && microLesson.resources.free.length > 0 && (
@@ -247,7 +332,8 @@ export default function CourseDetailPage() {
                             )}
                            </div>
                         </div>
-                     )) : (
+                       )
+                     }) : (
                         <div className="flex items-start gap-3">
                             <Checkbox 
                                 id={`l-${lessonIndex}`} 
@@ -255,18 +341,39 @@ export default function CourseDetailPage() {
                                 onCheckedChange={() => handleToggleLesson(lessonIndex)}
                                 className="mt-1"
                              />
-                             <div className="grid gap-1.5 leading-snug">
+                             <div className="grid gap-1.5 leading-snug flex-1">
                                 <label htmlFor={`l-${lessonIndex}`} className="font-semibold flex items-center gap-2 cursor-pointer">
                                     Mark as complete
                                 </label>
-                                <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{lesson.description}</p>
+                                 {isEditingLesson ? (
+                                    <Textarea 
+                                        value={editedContent.description}
+                                        onChange={(e) => setEditedContent({...editedContent, description: e.target.value})}
+                                        className="text-base leading-relaxed"
+                                        rows={4}
+                                    />
+                                 ) : (
+                                    <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{lesson.description}</p>
+                                 )}
+
+                                 {isEditingLesson ? (
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <Button size="sm" onClick={handleSaveEditing}><CheckIcon className="size-4 mr-2" />Save</Button>
+                                        <Button size="sm" variant="ghost" onClick={handleCancelEditing}><X className="size-4 mr-2" />Cancel</Button>
+                                    </div>
+                                ) : (
+                                     <Button size="sm" variant="ghost" className="justify-start p-1 h-auto -ml-1 text-muted-foreground" onClick={() => handleStartEditing(lessonEditingId, lesson.title, lesson.description)}>
+                                        <Pencil className="size-3 mr-2" /> Edit
+                                    </Button>
+                                )}
                              </div>
                         </div>
                      )}
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            ))}
+              )
+            })}
           </Accordion>
 
           <div className="mt-8 border-t pt-6">
