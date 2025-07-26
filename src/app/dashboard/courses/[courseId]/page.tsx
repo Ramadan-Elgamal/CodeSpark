@@ -11,7 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, ChevronRight } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, Link as LinkIcon } from 'lucide-react';
 import type { GenerateCourseOutput, Lesson, MicroLesson } from '@/ai/flows/generate-course';
 
 // Add a 'completed' property to lessons and micro-lessons for state tracking
@@ -207,11 +207,44 @@ export default function CourseDetailPage() {
                             onCheckedChange={() => handleToggleMicroLesson(lessonIndex, microIndex)}
                             className="mt-1"
                           />
-                           <div className="grid gap-1.5 leading-snug">
+                           <div className="grid gap-1.5 leading-snug flex-1">
                              <label htmlFor={`ml-${lessonIndex}-${microIndex}`} className="font-semibold flex items-center gap-2 cursor-pointer">
                                {`${lessonIndex + 1}.${microIndex + 1} ${microLesson.title}`}
                              </label>
                              <p className="text-muted-foreground whitespace-pre-wrap text-base leading-relaxed">{microLesson.description}</p>
+                            {microLesson.resources && (microLesson.resources.free?.length || microLesson.resources.paid?.length) && (
+                                <div className="mt-3 rounded-md border bg-secondary/50 p-3 text-sm">
+                                    <h6 className="font-semibold mb-2">Resources</h6>
+                                    {microLesson.resources.free && microLesson.resources.free.length > 0 && (
+                                        <div className="mb-2">
+                                            <p className="font-medium text-secondary-foreground mb-1">Free</p>
+                                            <ul className="list-none space-y-1">
+                                                {microLesson.resources.free.map((link, linkIndex) => (
+                                                    <li key={linkIndex}>
+                                                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+                                                            <LinkIcon className="size-3" /> {link.title} <span className="text-xs text-muted-foreground">({link.platform})</span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                     {microLesson.resources.paid && microLesson.resources.paid.length > 0 && (
+                                        <div>
+                                            <p className="font-medium text-secondary-foreground mb-1">Paid</p>
+                                            <ul className="list-none space-y-1">
+                                                {microLesson.resources.paid.map((link, linkIndex) => (
+                                                    <li key={linkIndex}>
+                                                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+                                                           <LinkIcon className="size-3" /> {link.title} <span className="text-xs text-muted-foreground">({link.platform})</span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                            </div>
                         </div>
                      )) : (

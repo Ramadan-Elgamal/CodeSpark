@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Loader2, Wand2, Save, BookText, Rocket, FileText, ArrowRight, ChevronRight } from 'lucide-react';
+import { Loader2, Wand2, Save, BookText, Rocket, FileText, ArrowRight, ChevronRight, Link as LinkIcon } from 'lucide-react';
 import type { GenerateCourseOutput } from '@/ai/flows/generate-course';
 import Link from 'next/link';
 
@@ -197,12 +197,45 @@ function ResultState({ courseResult }: { courseResult: GenerateCourseOutput }) {
                 <AccordionContent className="pt-1 pb-2">
                     <div className="space-y-3 pl-6">
                         {Array.isArray(lesson.microLessons) && lesson.microLessons.length > 0 ? lesson.microLessons.map((microLesson, microIndex) => (
-                            <div key={microIndex}>
+                            <div key={microIndex} className="border-l-2 border-primary/20 pl-4 py-2 space-y-2">
                                <h5 className="font-semibold flex items-center gap-2 text-sm">
                                  <ChevronRight className="size-4 text-primary/70" />
                                 {`${lessonIndex + 1}.${microIndex + 1} ${microLesson.title}`}
                                </h5>
-                               <p className="text-muted-foreground whitespace-pre-wrap text-sm mt-1 ml-6">{microLesson.description}</p>
+                               <p className="text-muted-foreground whitespace-pre-wrap text-sm ml-6">{microLesson.description}</p>
+                                {microLesson.resources && (microLesson.resources.free?.length || microLesson.resources.paid?.length) && (
+                                <div className="ml-6 mt-2 rounded-md border bg-secondary/30 p-3 text-xs">
+                                    <h6 className="font-semibold mb-2">Resources</h6>
+                                    {microLesson.resources.free && microLesson.resources.free.length > 0 && (
+                                        <div className="mb-2">
+                                            <p className="font-medium text-secondary-foreground mb-1">Free</p>
+                                            <ul className="list-none space-y-1">
+                                                {microLesson.resources.free.map((link, linkIndex) => (
+                                                    <li key={linkIndex}>
+                                                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+                                                            <LinkIcon className="size-3" /> {link.title} <span className="text-xs text-muted-foreground">({link.platform})</span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                     {microLesson.resources.paid && microLesson.resources.paid.length > 0 && (
+                                        <div>
+                                            <p className="font-medium text-secondary-foreground mb-1">Paid</p>
+                                            <ul className="list-none space-y-1">
+                                                {microLesson.resources.paid.map((link, linkIndex) => (
+                                                    <li key={linkIndex}>
+                                                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+                                                           <LinkIcon className="size-3" /> {link.title} <span className="text-xs text-muted-foreground">({link.platform})</span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                             </div>
                         )) : (
                             <p className="text-muted-foreground whitespace-pre-wrap text-sm">{lesson.description}</p>
