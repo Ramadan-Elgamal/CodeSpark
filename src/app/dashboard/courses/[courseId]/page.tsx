@@ -13,8 +13,10 @@ import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, Link as LinkIcon, Pencil, X, Check as CheckIcon } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import { ArrowLeft, AlertTriangle, BookText, Rocket, FileText, Link as LinkIcon, Pencil, X, Check as CheckIcon, Share2, Copy } from 'lucide-react';
 import type { GenerateCourseOutput, Lesson, MicroLesson } from '@/ai/flows/generate-course';
+import { useToast } from '@/hooks/use-toast';
 
 // Add a 'completed' property to lessons and micro-lessons for state tracking
 interface CourseLesson extends Lesson {
@@ -31,6 +33,7 @@ interface CourseWithProgress extends GenerateCourseOutput {
 
 export default function CourseDetailPage() {
   const params = useParams();
+  const { toast } = useToast();
   const { courseId } = params;
   const [course, setCourse] = useState<CourseWithProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +41,41 @@ export default function CourseDetailPage() {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState<{ title: string; description: string }>({ title: '', description: '' });
+  
+  const [shareLink, setShareLink] = useState('');
+
+  const generateShareLink = () => {
+    if (!course) return;
+    try {
+      const courseString = JSON.stringify(course);
+      const encodedCourse = btoa(encodeURIComponent(courseString));
+      const link = `${window.location.origin}/share/${encodedCourse}`;
+      setShareLink(link);
+    } catch (e) {
+      console.error("Failed to generate share link", e);
+      toast({
+        title: "Error",
+        description: "Could not generate a shareable link for this course.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareLink).then(() => {
+      toast({
+        title: "Copied!",
+        description: "The shareable link has been copied to your clipboard.",
+      });
+    }).catch(err => {
+        console.error("Failed to copy", err);
+        toast({
+            title: "Error",
+            description: "Could not copy the link.",
+            variant: "destructive",
+        })
+    });
+  };
 
 
   useEffect(() => {
@@ -205,11 +243,35 @@ export default function CourseDetailPage() {
 
   return (
     <div className="space-y-6">
-       <Button asChild variant="outline" size="sm">
+      <div className="flex justify-between items-center">
+        <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/courses">
                 <ArrowLeft className="mr-2" /> Back to My Courses
             </Link>
-       </Button>
+        </Button>
+         <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline" size="sm" onClick={generateShareLink}>
+                    <Share2 className="mr-2" /> Share
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Share this Course</DialogTitle>
+                    <DialogDescription>
+                        Anyone with this link will be able to view a read-only version of this course.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                    <Input value={shareLink} readOnly />
+                    <Button onClick={copyToClipboard} size="sm" className="px-3">
+                        <span className="sr-only">Copy</span>
+                        <Copy className="h-4 w-4" />
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+      </div>
         
       <Card>
         <CardHeader>
