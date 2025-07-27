@@ -72,6 +72,7 @@ Your task is to generate a comprehensive and detailed curriculum for a given pro
         *   Generate a series of main **lessons** that logically progress through the topic.
         *   For each lesson, generate 3-5 comprehensive **micro-lessons**. Each micro-lesson needs a clear title and a detailed, in-depth description that thoroughly explains the concept. Assume the learner is new to the specific concept being taught in the micro-lesson.
     *   **Find Resources:** For **EACH** micro-lesson, you must find relevant learning resources.
+        *   **CRITICAL RULE:** All URLs must be real, fully-qualified URLs. Do NOT use placeholder URLs like '#'. If you cannot find a valid resource, omit the 'resources' object for that micro-lesson entirely.
         *   **Free Resources:** Find 1-2 high-quality, relevant free resources. These can be YouTube videos, official documentation pages, or in-depth articles. Provide a clear title, the full URL, and the platform name (e.g., 'YouTube', 'Official Docs').
         *   **Paid Resources:** Find 1 optional paid resource, like a course on Udemy or Coursera that specifically covers the micro-lesson's topic. Provide the title, URL, and platform.
     *   **Final Note:** Include a brief, encouraging final note.
