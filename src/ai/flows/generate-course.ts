@@ -90,8 +90,13 @@ const generateCourseFlow = ai.defineFlow(
     inputSchema: GenerateCourseInputSchema,
     outputSchema: GenerateCourseOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input) => {
+    const { output } = await prompt(input);
+    if (!output) {
+      throw new Error(
+        'The AI model did not return a valid course structure. This could be due to a content safety policy violation or other model issue. Please try again with a different topic.'
+      );
+    }
+    return output;
   }
 );
