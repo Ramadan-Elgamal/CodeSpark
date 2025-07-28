@@ -26,6 +26,51 @@ export interface FormState {
   courseResult?: CourseResult;
 }
 
+const createMockCourse = (topic: string): CourseResult => ({
+  title: `Placeholder: ${topic} Fundamentals`,
+  summary: `This is a sample course for "${topic}". The AI is currently unavailable, but you can explore the structure of a typical course.`,
+  isProjectBased: false,
+  lessons: [
+    {
+      title: 'Introduction to Core Concepts',
+      description: 'An overview of the fundamental principles of the topic.',
+      microLessons: [
+        {
+          title: 'Setup & Installation',
+          description: 'A step-by-step guide to getting your development environment ready.',
+          resources: {
+            free: [
+              { title: 'Official Documentation', url: '#', platform: 'Docs' },
+            ],
+          },
+        },
+        {
+          title: '"Hello World" Example',
+          description: 'Creating your very first simple application to understand the basics.',
+          resources: {},
+        },
+      ],
+    },
+    {
+      title: 'Diving Deeper',
+      description: 'Exploring more advanced features and concepts.',
+      microLessons: [
+        {
+          title: 'Key Feature A',
+          description: 'Understanding and implementing a core feature of this technology.',
+          resources: {
+            paid: [
+              { title: 'In-Depth Course', url: '#', platform: 'Udemy' },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+  finalNote: "Remember to try generating your course again later when the AI service is back online. Happy coding!",
+});
+
+
 export async function generateCourseAction(
   prevState: FormState,
   formData: FormData,
@@ -64,6 +109,11 @@ export async function generateCourseAction(
     };
   } catch (error) {
     console.error(error);
-    return { status: 'error', message: 'An unexpected error occurred during course generation.' };
+    const mockCourse = createMockCourse(topic);
+    return { 
+      status: 'success', 
+      message: 'The AI is currently unavailable. Here is a sample course to explore.',
+      courseResult: mockCourse 
+    };
   }
 }
