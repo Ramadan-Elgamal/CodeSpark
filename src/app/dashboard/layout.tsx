@@ -65,7 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <SidebarMenu>
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
+                <Link href={item.href} prefetch={true}>
                   <SidebarMenuButton isActive={isActive(item.href)}>
                     <item.icon />
                     <span>{item.label}</span>
