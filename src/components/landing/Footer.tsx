@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Logo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Github, Linkedin, Twitter } from 'lucide-react';
+import { Github, Linkedin, Twitter, Coffee } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,8 +9,8 @@ export function Footer() {
   return (
     <footer className="bg-secondary text-secondary-foreground">
       <div className="container py-12 px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-          <div className="col-span-full lg:col-span-1 flex flex-col items-start">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          <div className="col-span-full lg:col-span-2 flex flex-col items-start">
             <Link href="/" className="flex items-center gap-2 mb-4" prefetch={false}>
               <Logo className="h-7 w-7 text-primary" />
               <span className="text-xl font-headline font-semibold text-foreground">CodeSpark</span>
@@ -46,20 +46,6 @@ export function Footer() {
             </nav>
           </div>
           <div className="space-y-2">
-            <h4 className="font-semibold text-foreground">Resources</h4>
-            <nav className="flex flex-col gap-1.5">
-              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
-                Blog
-              </Link>
-              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
-                Docs
-              </Link>
-              <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
-                Support
-              </Link>
-            </nav>
-          </div>
-          <div className="space-y-2">
             <h4 className="font-semibold text-foreground">Legal</h4>
             <nav className="flex flex-col gap-1.5">
               <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
@@ -69,6 +55,17 @@ export function Footer() {
                 Privacy Policy
               </Link>
             </nav>
+          </div>
+          <div className="space-y-3 rounded-lg bg-background/50 p-4">
+            <h4 className="font-semibold text-foreground">Enjoying the app?</h4>
+            <p className="text-xs">
+              Consider supporting the project with a small donation. It helps keep the servers running!
+            </p>
+            <Button asChild size="sm" className="bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90 w-full">
+              <Link href="https://www.buymeacoffee.com/your-username" target="_blank" rel="noopener noreferrer">
+                <Coffee className="mr-2" /> Buy Me a Coffee
+              </Link>
+            </Button>
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
