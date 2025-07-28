@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer className="bg-secondary text-secondary-foreground">
       <div className="container py-12 px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           <div className="col-span-full lg:col-span-2 flex flex-col items-start">
             <Link href="/" className="flex items-center gap-2 mb-4" prefetch={false}>
               <Logo className="h-7 w-7 text-primary" />
@@ -56,7 +56,7 @@ export function Footer() {
               </Link>
             </nav>
           </div>
-          <div className="space-y-3 rounded-lg bg-background/50 p-4">
+          <div className="space-y-3 rounded-lg bg-background/50 p-4 sm:col-span-2 md:col-span-1 lg:col-span-1">
             <h4 className="font-semibold text-foreground">Enjoying the app?</h4>
             <p className="text-xs">
               Consider supporting the project with a small donation. It helps keep the servers running!
