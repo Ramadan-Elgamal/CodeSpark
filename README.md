@@ -10,6 +10,9 @@
 
 CodeSpark AI transforms course creation from hours to minutes by leveraging artificial intelligence to generate structured programming curricula. Simply provide a topic and learning phase, and get a complete course outline with lessons, micro-lessons, and curated resources.
 
+## 🌐 [Live Demo](https://code-spark.netlify.app/)
+
+
 ## ✨ Features
 
 - **🤖 AI-Powered Generation**: Instant course creation using Google AI and Genkit framework
